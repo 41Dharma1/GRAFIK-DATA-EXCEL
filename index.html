@@ -1,27 +1,157 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Master Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Inventory Dashboard</title>
     <style>
+        /* RESET & BASE STYLES */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #1a1a1a; overflow: hidden; }
+
+        body { 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            background: #0b0f1a; 
+            color: white;
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden;
+        }
+
+        /* NAVIGATION BAR - GLASSMORPHISM */
+        nav { 
+            background: rgba(15, 23, 42, 0.85); 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 15px 25px; 
+            display: flex; 
+            justify-content: center; 
+            gap: 15px; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn {
+            text-decoration: none;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-1 { background: linear-gradient(135deg, #ef4444, #991b1b); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+        .btn-2 { background: linear-gradient(135deg, #10b981, #064e3b); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+        .btn-3 { background: linear-gradient(135deg, #3b82f6, #1e3a8a); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
+        .btn-4 { background: linear-gradient(135deg, #f59e0b, #78350f); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); }
+
+        .btn:hover { 
+            transform: translateY(-4px) scale(1.05); 
+            filter: brightness(1.2);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* GRID SYSTEM */
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
-            height: 100vh;
-            gap: 10px;
-            padding: 10px;
+            flex-grow: 1;
+            gap: 15px;
+            padding: 15px;
+            background: radial-gradient(circle at center, #1e293b 0%, #0b0f1a 100%);
         }
-        iframe { width: 100%; height: 100%; border: 2px solid #333; border-radius: 8px; }
+
+        /* CARD STYLE */
+        .chart-card {
+            position: relative;
+            background: #1e293b;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            transition: all 0.5s ease;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .chart-label {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(15, 23, 42, 0.8);
+            color: #38ef7d;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+            border: 1px solid rgba(56, 239, 125, 0.4);
+            backdrop-filter: blur(5px);
+        }
+
+        .chart-card:hover {
+            transform: translateY(-10px) scale(1.01);
+            border: 1px solid rgba(56, 239, 125, 0.6);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: none;
+            padding-top: 50px; /* Memberi ruang untuk label */
+            background: #ffffff; /* Background putih agar grafik Excel terlihat jelas */
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            nav { flex-wrap: wrap; padding: 10px; }
+            .btn { font-size: 11px; padding: 8px 15px; flex: 1 1 40%; justify-content: center; }
+            .grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(4, 400px);
+                overflow-y: auto;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <nav>
+        <a href="index.html" class="btn btn-1"><span>🚜</span> Reach Truck</a>
+        <a href="index2.html" class="btn btn-2"><span>📦</span> Palet Mover</a>
+        <a href="index3.html" class="btn btn-3"><span>📦</span> Karton</a>
+        <a href="index4.html" class="btn btn-4"><span>🚚</span> Unload & Loading</a>
+    </nav>
+
     <div class="grid">
-        <iframe src="index.html"></iframe>
-        <iframe src="index2.html"></iframe>
-        <iframe src="index3.html"></iframe>
-        <iframe src="index4.html"></iframe>
+        <div class="chart-card">
+            <div class="chart-label">● LIVE Reach Truck</div>
+            <iframe src="index.html"></iframe>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-label">● LIVE Palet Mover</div>
+            <iframe src="index2.html"></iframe>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-label">● LIVE Karton</div>
+            <iframe src="index3.html"></iframe>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-label">● LIVE Unload & Loading</div>
+            <iframe src="index4.html"></iframe>
+        </div>
     </div>
+
 </body>
 </html>
