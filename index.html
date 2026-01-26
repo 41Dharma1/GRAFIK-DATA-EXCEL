@@ -3,54 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Tracking Dashboard</title>
+    <title>Responsive Inventory Dashboard</title>
     <style>
+        :root {
+            --primary-color: #0078d4;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+        }
+
         body {
-            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-            background-color: #e9ecef;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
             margin: 0;
-            padding: 20px;
+            padding: 10px; /* Padding kecil untuk layar HP */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 1200px; /* Lebih lebar untuk monitor desktop */
             display: flex;
             flex-direction: column;
-            align-items: center;
+            gap: 15px;
         }
 
         .card {
-            width: 100%;
-            max-width: 900px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             overflow: hidden;
-            border: 1px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
         }
 
         .card-header {
-            background: #0078d4;
+            background: var(--primary-color);
             color: white;
             padding: 15px 20px;
-            font-size: 1.25rem;
-            font-weight: bold;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap; /* Agar judul & tombol tidak tabrakan di HP */
+            gap: 10px;
         }
 
-        .status-badge {
-            font-size: 0.7rem;
+        .title-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .refresh-btn {
             background: rgba(255,255,255,0.2);
-            padding: 4px 8px;
-            border-radius: 10px;
-            text-transform: uppercase;
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.3s;
         }
 
-        .chart-container {
+        .refresh-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Responsive Iframe Container */
+        .chart-wrapper {
             position: relative;
             width: 100%;
-            padding-top: 65%; 
+            /* Rasio aspek: 16:9 pada desktop, 4:3 pada mobile */
+            padding-top: 56.25%; 
         }
 
-        .chart-container iframe {
+        @media (max-width: 600px) {
+            .chart-wrapper {
+                padding-top: 75%; /* Lebih kotak untuk HP agar data tidak terlalu kecil */
+            }
+            .card-header {
+                font-size: 1rem;
+            }
+        }
+
+        .chart-wrapper iframe {
             position: absolute;
             top: 0;
             left: 0;
@@ -59,59 +97,90 @@
             border: none;
         }
 
-        .card-footer {
-            padding: 10px 20px;
+        .footer {
+            padding: 12px 20px;
             background: #f8f9fa;
             color: #6c757d;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             display: flex;
             justify-content: space-between;
-            border-top: 1px solid #dee2e6;
+            align-items: center;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .dot {
+            height: 8px;
+            width: 8px;
+            background-color: #27ae60;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <div class="card-header">
-        <span>📊 Inventory Tracking - Reach Truk</span>
-        <span class="status-badge" id="refresh-status">Syncing...</span>
-    </div>
-    
-    <div class="chart-container">
-        <iframe id="excelFrame" src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=True&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=False"></iframe>
-    </div>
+<div class="dashboard-container">
+    <div class="card">
+        <div class="card-header">
+            <div class="title-group">
+                <span>📊</span>
+                <strong>Inventory Reach Truk</strong>
+            </div>
+            <button class="refresh-btn" onclick="manualRefresh()">🔄 Update Data</button>
+        </div>
+        
+        <div class="chart-wrapper">
+            <iframe id="sheetFrame" src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=True&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True"></iframe>
+        </div>
 
-    <div class="card-footer">
-        <span>Sumber: SharePoint Online</span>
-        <span id="last-update">Update otomatis aktif</span>
+        <div class="footer">
+            <div class="live-indicator">
+                <span class="dot"></span> LIVE SINKRON
+            </div>
+            <div id="timestamp">Memuat...</div>
+        </div>
     </div>
 </div>
 
 <script>
-    // Fungsi untuk me-refresh iframe saja tanpa reload seluruh halaman
-    function refreshIframe() {
-        const iframe = document.getElementById('excelFrame');
-        const status = document.getElementById('refresh-status');
-        
-        // Simpan URL lama dan muat ulang
-        const currentSrc = iframe.src;
-        iframe.src = ''; 
-        iframe.src = currentSrc;
-        
-        // Update teks status sementara
-        status.innerText = "Refreshing...";
-        status.style.background = "#27ae60"; 
-        
-        setTimeout(() => {
-            status.innerText = "Live";
-            status.style.background = "rgba(255,255,255,0.2)";
-        }, 3000);
+    function updateTimestamp() {
+        const now = new Date();
+        document.getElementById('timestamp').innerText = "Cek terakhir: " + now.toLocaleTimeString();
     }
 
-    // Set interval refresh (Contoh: setiap 5 menit / 300000 ms)
-    // Jangan terlalu cepat (misal tiap detik) agar tidak membebani browser
-    setInterval(refreshIframe, 300000); 
+    function manualRefresh() {
+        const iframe = document.getElementById('sheetFrame');
+        const btn = document.querySelector('.refresh-btn');
+        
+        // Animasi loading sederhana
+        btn.innerText = "Memperbarui...";
+        iframe.src = iframe.src; // Reload iframe
+        
+        setTimeout(() => {
+            btn.innerText = "🔄 Update Data";
+            updateTimestamp();
+        }, 2000);
+    }
+
+    // Update otomatis setiap 3 menit
+    setInterval(manualRefresh, 180000);
+    
+    // Set timestamp awal
+    updateTimestamp();
 </script>
 
 </body>
