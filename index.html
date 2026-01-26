@@ -3,14 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Dashboard Clean</title>
+    <title>Inventory Dashboard 4-Panel</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #ffffff; }
         
-        .main-container {
+        body, html { 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden; 
+            background-color: #f0f2f5; 
+        }
+
+        /* Container menggunakan Grid 2x2 */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 2 Kolom */
+            grid-template-rows: 1fr 1fr;    /* 2 Baris */
             width: 100vw;
             height: 100vh;
+            gap: 5px; /* Jarak antar grafik */
+            padding: 5px;
+        }
+
+        .chart-box {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border: 1px solid #ddd;
+            overflow: hidden;
         }
 
         iframe {
@@ -26,31 +46,46 @@
             background: #0078d4;
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 10px 20px;
+            border-radius: 50px;
             cursor: pointer;
             z-index: 9999;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <button class="refresh-trigger" onclick="reloadChart()">🔄 Perbarui Data</button>
+    <button class="refresh-trigger" onclick="reloadAll()">🔄 Perbarui Semua</button>
 
-    <div class="main-container">
-        <iframe id="chartFrame" 
-            src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True">
-        </iframe>
+    <div class="dashboard-grid">
+        <div class="chart-box">
+            <iframe class="sheet-frame" src="URL_GRAFIK_1"></iframe>
+        </div>
+        <div class="chart-box">
+            <iframe class="sheet-frame" src="URL_GRAFIK_2"></iframe>
+        </div>
+        <div class="chart-box">
+            <iframe class="sheet-frame" src="URL_GRAFIK_3"></iframe>
+        </div>
+        <div class="chart-box">
+            <iframe class="sheet-frame" src="URL_GRAFIK_4"></iframe>
+        </div>
     </div>
 
     <script>
-        function reloadChart() {
-            const frame = document.getElementById('chartFrame');
-            const currentSrc = frame.src;
-            frame.src = '';
-            setTimeout(() => { frame.src = currentSrc; }, 100);
+        function reloadAll() {
+            const frames = document.querySelectorAll('.sheet-frame');
+            frames.forEach(frame => {
+                const currentSrc = frame.src;
+                frame.src = '';
+                setTimeout(() => { frame.src = currentSrc; }, 100);
+            });
         }
+        
+        // Auto refresh setiap 5 menit
+        setInterval(reloadAll, 300000);
     </script>
 
 </body>
