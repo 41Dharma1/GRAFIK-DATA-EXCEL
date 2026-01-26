@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Single Monitor Dashboard</title>
+    <style>
+        /* RESET & BASE */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #0b0f1a; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+        }
+
+        /* NAVIGASI PREMIUM */
+        nav { 
+            background: rgba(15, 23, 42, 0.9); 
+            backdrop-filter: blur(15px); 
+            padding: 15px; 
+            display: flex; 
+            justify-content: center; 
+            gap: 15px; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); 
+            z-index: 100; 
+        }
+
+        .btn { 
+            text-decoration: none; 
+            color: white; 
+            padding: 10px 25px; 
+            border-radius: 12px; 
+            font-size: 13px; 
+            font-weight: bold; 
+            transition: 0.3s; 
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+        }
+
+        /* Warna Tombol */
+        .btn-1 { background: #ef4444; } 
+        .btn-2 { background: #10b981; } 
+        .btn-3 { background: #3b82f6; } 
+        .btn-4 { background: #f59e0b; }
+
+        .btn:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 5px 20px rgba(255,255,255,0.1);
+            filter: brightness(1.2);
+        }
+
+        /* AREA MONITOR TUNGGAL (CROPPER) */
+        .monitor-container {
+            flex-grow: 1;
+            margin: 15px;
+            background: #1e293b;
+            border-radius: 25px;
+            border: 2px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden; /* Memotong garis hitam bawah */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .monitor-label {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            color: #38ef7d;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            z-index: 10;
+            border: 1px solid #38ef7d;
+        }
+
+        /* IFRAME FULL SCREEN + CROP */
+        iframe {
+            width: 100%;
+            /* Dibuat lebih tinggi 40px untuk mendorong toolbar hitam ke bawah area potong */
+            height: calc(100% + 40px); 
+            border: none;
+            background: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" target="monitorFrame" class="btn btn-1">REACH TRUCK</a>
+        <a href="index2.html" target="monitorFrame" class="btn btn-2">PALET MOVER</a>
+        <a href="index3.html" target="monitorFrame" class="btn btn-3">KARTON</a>
+        <a href="index4.html" target="monitorFrame" class="btn btn-4">LOAD & UNLOAD</a>
+    </nav>
+
+    <div class="monitor-container">
+        <div class="monitor-label">● LIVE MONITORING SYSTEM</div>
+        
+        <iframe name="monitorFrame" id="monitorFrame" src="index.html"></iframe>
+    </div>
+
+</body>
+</html>
