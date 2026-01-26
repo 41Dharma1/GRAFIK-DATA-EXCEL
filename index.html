@@ -3,185 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Inventory Dashboard</title>
+    <title>Inventory Dashboard Full</title>
     <style>
-        :root {
-            --primary-color: #0078d4;
-            --bg-color: #f0f2f5;
-            --card-bg: #ffffff;
-        }
-
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
+        /* Menghilangkan semua margin dan padding bawaan browser */
+        * {
             margin: 0;
-            padding: 10px; /* Padding kecil untuk layar HP */
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .dashboard-container {
+        body, html {
             width: 100%;
-            max-width: 1200px; /* Lebih lebar untuk monitor desktop */
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            height: 100%;
+            overflow: hidden; /* Mencegah double scrollbar */
+            background-color: #ffffff;
         }
 
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            overflow: hidden;
+        /* Membuat container memenuhi layar */
+        .full-screen-container {
+            width: 100vw;
+            height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        .card-header {
-            background: var(--primary-color);
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap; /* Agar judul & tombol tidak tabrakan di HP */
-            gap: 10px;
-        }
-
-        .title-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .refresh-btn {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.4);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: 0.3s;
-        }
-
-        .refresh-btn:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        /* Responsive Iframe Container */
-        .chart-wrapper {
-            position: relative;
-            width: 100%;
-            /* Rasio aspek: 16:9 pada desktop, 4:3 pada mobile */
-            padding-top: 56.25%; 
-        }
-
-        @media (max-width: 600px) {
-            .chart-wrapper {
-                padding-top: 75%; /* Lebih kotak untuk HP agar data tidak terlalu kecil */
-            }
-            .card-header {
-                font-size: 1rem;
-            }
-        }
-
-        .chart-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
+        /* Iframe akan mengambil semua sisa ruang yang ada */
+        iframe {
+            flex-grow: 1;
             width: 100%;
             height: 100%;
             border: none;
         }
 
-        .footer {
-            padding: 12px 20px;
-            background: #f8f9fa;
-            color: #6c757d;
-            font-size: 0.8rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* Tombol refresh melayang (Floating) agar tidak memakan tempat */
+        .floating-refresh {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            font-family: sans-serif;
+            font-size: 12px;
+            z-index: 999;
+            opacity: 0.7;
         }
 
-        .live-indicator {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: #27ae60;
-            font-weight: bold;
-        }
-
-        .dot {
-            height: 8px;
-            width: 8px;
-            background-color: #27ae60;
-            border-radius: 50%;
-            display: inline-block;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 1; }
+        .floating-refresh:hover {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
 
-<div class="dashboard-container">
-    <div class="card">
-        <div class="card-header">
-            <div class="title-group">
-                <span>📊</span>
-                <strong>Inventory Reach Truk</strong>
-            </div>
-            <button class="refresh-btn" onclick="manualRefresh()">🔄 Update Data</button>
-        </div>
-        
-        <div class="chart-wrapper">
-            <iframe id="sheetFrame" src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=True&wdHideGridlines=True&wdHideHeaders=False"></iframe>
-        </div>
+    <button class="floating-refresh" onclick="manualRefresh()">🔄 Update Data</button>
 
-        <div class="footer">
-            <div class="live-indicator">
-                <span class="dot"></span> LIVE SINKRON
-            </div>
-            <div id="timestamp">Memuat...</div>
-        </div>
+    <div class="full-screen-container">
+        <iframe id="sheetFrame" 
+            src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=True&wdHideGridlines=True&wdHideHeaders=False">
+        </iframe>
     </div>
-</div>
 
-<script>
-    function updateTimestamp() {
-        const now = new Date();
-        document.getElementById('timestamp').innerText = "Cek terakhir: " + now.toLocaleTimeString();
-    }
+    <script>
+        function manualRefresh() {
+            const iframe = document.getElementById('sheetFrame');
+            // Refresh iframe tanpa reload seluruh halaman
+            iframe.src = iframe.src;
+        }
 
-    function manualRefresh() {
-        const iframe = document.getElementById('sheetFrame');
-        const btn = document.querySelector('.refresh-btn');
-        
-        // Animasi loading sederhana
-        btn.innerText = "Memperbarui...";
-        iframe.src = iframe.src; // Reload iframe
-        
-        setTimeout(() => {
-            btn.innerText = "🔄 Update Data";
-            updateTimestamp();
-        }, 2000);
-    }
-
-    // Update otomatis setiap 3 menit
-    setInterval(manualRefresh, 180000);
-    
-    // Set timestamp awal
-    updateTimestamp();
-</script>
+        // Auto refresh setiap 5 menit
+        setInterval(manualRefresh, 300000);
+    </script>
 
 </body>
 </html>
