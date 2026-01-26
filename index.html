@@ -11,7 +11,8 @@
             margin: 0;
             padding: 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
         }
 
         .card {
@@ -25,21 +26,27 @@
         }
 
         .card-header {
-            background: #0078d4; /* Warna khas Excel/Microsoft */
+            background: #0078d4;
             color: white;
             padding: 15px 20px;
             font-size: 1.25rem;
             font-weight: bold;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
         }
 
-        /* Container Fleksibel */
+        .status-badge {
+            font-size: 0.7rem;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
         .chart-container {
             position: relative;
             width: 100%;
-            /* Membuat aspek rasio tetap terjaga (responsive) */
             padding-top: 65%; 
         }
 
@@ -57,7 +64,8 @@
             background: #f8f9fa;
             color: #6c757d;
             font-size: 0.85rem;
-            text-align: right;
+            display: flex;
+            justify-content: space-between;
             border-top: 1px solid #dee2e6;
         }
     </style>
@@ -66,17 +74,45 @@
 
 <div class="card">
     <div class="card-header">
-        📊 Real-time Inventory Tracking - Reach Truk
+        <span>📊 Inventory Tracking - Reach Truk</span>
+        <span class="status-badge" id="refresh-status">Syncing...</span>
     </div>
     
     <div class="chart-container">
-        <iframe src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=True&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True"></iframe>
+        <iframe id="excelFrame" src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=True&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True"></iframe>
     </div>
 
     <div class="card-footer">
-        Sumber Data: SharePoint Online (Auto-update)
+        <span>Sumber: SharePoint Online</span>
+        <span id="last-update">Update otomatis aktif</span>
     </div>
 </div>
+
+<script>
+    // Fungsi untuk me-refresh iframe saja tanpa reload seluruh halaman
+    function refreshIframe() {
+        const iframe = document.getElementById('excelFrame');
+        const status = document.getElementById('refresh-status');
+        
+        // Simpan URL lama dan muat ulang
+        const currentSrc = iframe.src;
+        iframe.src = ''; 
+        iframe.src = currentSrc;
+        
+        // Update teks status sementara
+        status.innerText = "Refreshing...";
+        status.style.background = "#27ae60"; 
+        
+        setTimeout(() => {
+            status.innerText = "Live";
+            status.style.background = "rgba(255,255,255,0.2)";
+        }, 3000);
+    }
+
+    // Set interval refresh (Contoh: setiap 5 menit / 300000 ms)
+    // Jangan terlalu cepat (misal tiap detik) agar tidak membebani browser
+    setInterval(refreshIframe, 300000); 
+</script>
 
 </body>
 </html>
