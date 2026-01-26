@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory Dashboard Full</title>
     <style>
-        /* Menghilangkan semua margin dan padding bawaan browser */
+        /* Menghilangkan semua space kosong */
         * {
             margin: 0;
             padding: 0;
@@ -15,68 +15,69 @@
         body, html {
             width: 100%;
             height: 100%;
-            overflow: hidden; /* Mencegah double scrollbar */
+            overflow: hidden; /* Hilangkan scrollbar utama */
             background-color: #ffffff;
         }
 
-        /* Membuat container memenuhi layar */
-        .full-screen-container {
+        /* Container utama memenuhi seluruh layar browser */
+        .main-container {
             width: 100vw;
             height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
-        /* Iframe akan mengambil semua sisa ruang yang ada */
+        /* Iframe dibuat memenuhi container */
         iframe {
-            flex-grow: 1;
             width: 100%;
             height: 100%;
             border: none;
         }
 
-        /* Tombol refresh melayang (Floating) agar tidak memakan tempat */
-        .floating-refresh {
+        /* Tombol refresh melayang di pojok agar tidak mengganggu grafik */
+        .refresh-trigger {
             position: fixed;
             bottom: 20px;
             right: 20px;
             background: #0078d4;
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 50px;
+            padding: 8px 16px;
+            border-radius: 20px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            font-family: sans-serif;
+            font-family: Arial, sans-serif;
             font-size: 12px;
-            z-index: 999;
-            opacity: 0.7;
+            z-index: 9999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
         }
 
-        .floating-refresh:hover {
-            opacity: 1;
+        .refresh-trigger:active {
+            transform: scale(0.9);
         }
     </style>
 </head>
 <body>
 
-    <button class="floating-refresh" onclick="manualRefresh()">🔄 Update Data</button>
+    <button class="refresh-trigger" onclick="reloadChart()">🔄 Perbarui Data</button>
 
-    <div class="full-screen-container">
-        <iframe id="sheetFrame" 
-            src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=True&wdHideGridlines=True&wdHideHeaders=False">
+    <div class="main-container">
+        <iframe id="chartFrame" 
+            src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=True&wdHideGridlines=True&wdHideHeaders=True">
         </iframe>
     </div>
 
     <script>
-        function manualRefresh() {
-            const iframe = document.getElementById('sheetFrame');
-            // Refresh iframe tanpa reload seluruh halaman
-            iframe.src = iframe.src;
+        function reloadChart() {
+            const frame = document.getElementById('chartFrame');
+            // Teknik paksa refresh iframe
+            const currentSrc = frame.src;
+            frame.src = '';
+            setTimeout(() => {
+                frame.src = currentSrc;
+            }, 100);
         }
 
-        // Auto refresh setiap 5 menit
-        setInterval(manualRefresh, 300000);
+        // Auto-update setiap 5 menit (300.000 ms)
+        setInterval(reloadChart, 300000);
     </script>
 
 </body>
