@@ -2,106 +2,222 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Single Monitor Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Logistics Dashboard</title>
     <style>
         /* RESET & BASE */
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background: #0b0f1a; 
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; 
+            background: #0f172a; /* Warna navy gelap yang lebih modern */
+            background-image: radial-gradient(circle at top right, #1e293b, #0f172a);
             height: 100vh; 
             display: flex; 
             flex-direction: column; 
             overflow: hidden; 
+            color: white;
         }
 
-        /* NAVIGASI PREMIUM */
+        /* TOP NAVIGATION */
         nav { 
-            background: rgba(15, 23, 42, 0.9); 
-            backdrop-filter: blur(15px); 
-            padding: 15px; 
+            background: rgba(15, 23, 42, 0.8); 
+            backdrop-filter: blur(20px); 
+            padding: 15px 30px; 
             display: flex; 
-            justify-content: center; 
-            gap: 15px; 
+            justify-content: space-between; 
+            align-items: center;
             border-bottom: 1px solid rgba(255,255,255,0.1); 
             z-index: 100; 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
 
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-dot {
+            width: 12px;
+            height: 12px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* BUTTON STYLING */
         .btn { 
             text-decoration: none; 
-            color: white; 
-            padding: 10px 25px; 
-            border-radius: 12px; 
-            font-size: 13px; 
-            font-weight: bold; 
-            transition: 0.3s; 
+            color: rgba(255,255,255,0.7); 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            font-size: 12px; 
+            font-weight: 600; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             border: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-
-        /* Warna Tombol */
-        .btn-1 { background: #ef4444; } 
-        .btn-2 { background: #10b981; } 
-        .btn-3 { background: #3b82f6; } 
-        .btn-4 { background: #f59e0b; }
 
         .btn:hover { 
-            transform: translateY(-3px); 
-            box-shadow: 0 5px 20px rgba(255,255,255,0.1);
-            filter: brightness(1.2);
+            color: white;
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+            border-color: rgba(255,255,255,0.3);
         }
 
-        /* AREA MONITOR TUNGGAL (CROPPER) */
+        /* Active State logic via CSS */
+        .btn:focus, .btn.active {
+            background: white;
+            color: #0f172a;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        /* MONITOR AREA */
+        .monitor-wrapper {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
         .monitor-container {
             flex-grow: 1;
-            margin: 15px;
-            background: #1e293b;
-            border-radius: 25px;
-            border: 2px solid rgba(255,255,255,0.1);
+            background: #000;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
             position: relative;
-            overflow: hidden; /* Memotong garis hitam bawah */
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            overflow: hidden; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
         }
 
-        .monitor-label {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(0,0,0,0.8);
-            color: #38ef7d;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            z-index: 10;
-            border: 1px solid #38ef7d;
-        }
-
-        /* IFRAME FULL SCREEN + CROP */
+        /* IFRAME CROPPER */
         iframe {
             width: 100%;
-            /* Dibuat lebih tinggi 40px untuk mendorong toolbar hitam ke bawah area potong */
-            height: calc(100% + 40px); 
+            height: calc(100% + 40px); /* Memotong bagian bawah */
             border: none;
-            background: white;
             position: absolute;
             top: 0;
             left: 0;
+            transition: opacity 0.5s ease;
         }
+
+        /* HEADER INFO INSIDE MONITOR */
+        .monitor-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 15px 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .status-tag {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            border: 1px solid #10b981;
+            text-transform: uppercase;
+        }
+
+        #digital-clock {
+            font-family: monospace;
+            color: rgba(255,255,255,0.6);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
     </style>
 </head>
+<body>
 
     <nav>
-        <a href="./index1.html" target="monitorFrame" class="btn btn-1">REACH TRUCK</a>
-        <a href="./index2.html" target="monitorFrame" class="btn btn-2">PALET MOVER</a>
-        <a href="./index3.html" target="monitorFrame" class="btn btn-3">KARTON</a>
-        <a href="./index4.html" target="monitorFrame" class="btn btn-4">LOAD & UNLOAD</a>
+        <div class="logo-area">
+            <div class="logo-dot"></div>
+            <div style="font-weight: 800; letter-spacing: 1px; font-size: 18px;">
+                LOGI<span style="color: #3b82f6;">SCAN</span>
+            </div>
+        </div>
+
+        <div class="nav-links">
+            <a href="./index1.html" target="monitorFrame" class="btn" onclick="setActive(this)">
+                <span>RT</span> REACH TRUCK
+            </a>
+            <a href="./index2.html" target="monitorFrame" class="btn" onclick="setActive(this)">
+                <span>PM</span> PALET MOVER
+            </a>
+            <a href="./index3.html" target="monitorFrame" class="btn" onclick="setActive(this)">
+                <span>KT</span> KARTON
+            </a>
+            <a href="./index4.html" target="monitorFrame" class="btn" onclick="setActive(this)">
+                <span>LU</span> LOAD & UNLOAD
+            </a>
+        </div>
+
+        <div id="digital-clock">00:00:00</div>
     </nav>
 
-    <div class="monitor-container">
-        <div class="monitor-label">● LIVE MONITORING SYSTEM</div>
+    <div class="monitor-wrapper">
+        <div class="monitor-container">
+            <div class="monitor-header">
+                <div class="status-tag">● Live System Monitoring</div>
+                <div style="color: white; font-size: 12px; opacity: 0.7;">Secure Connection: Active</div>
+            </div>
+            
+            <iframe name="monitorFrame" src="./index1.html" id="mainFrame"></iframe>
+        </div>
     </div>
 
-</html>
+    <script>
+        // Fungsi untuk menandai tombol aktif
+        function setActive(el) {
+            const btns = document.querySelectorAll('.btn');
+            btns.forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            
+            // Efek refresh halus saat ganti frame
+            const frame = document.getElementById('mainFrame');
+            frame.style.opacity = '0';
+            setTimeout(() => {
+                frame.style.opacity = '1';
+            }, 300);
+        }
 
+        // Jam Digital
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ':' +
+                           now.getMinutes().toString().padStart(2, '0') + ':' +
+                           now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('digital-clock').innerText = timeStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Set tombol pertama sebagai aktif saat load
+        window.onload = () => {
+            document.querySelector('.btn').classList.add('active');
+        };
+    </script>
+</body>
+</html>
