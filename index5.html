@@ -2,8 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GA Inventory Tracking - Real Time</title>
+    <title>GA Inventory Tracking - Real Time Dashboard</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -13,7 +14,7 @@
             --primary: #3e2723;
             --accent: #d4a373;
             --dark-panel: #1a120b;
-            --glow: 0 0 15px rgba(212, 163, 115, 0.4);
+            --border-glow: rgba(212, 163, 115, 0.3);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -28,165 +29,52 @@
             overflow: hidden;
         }
 
-        /* --- HEADER INTEGRATED --- */
+        /* --- HEADER --- */
         .header { 
-            height: 80px;
-            background: linear-gradient(90deg, #2b1d1a 0%, #3e2723 50%, #2b1d1a 100%);
+            height: 85px;
+            background: linear-gradient(180deg, #2b1d1a 0%, #1a120b 100%);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 25px;
-            border-bottom: 3px solid var(--accent);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            padding: 0 30px;
+            border-bottom: 2px solid var(--accent);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 10;
         }
 
-        .header-brand { display: flex; align-items: center; gap: 15px; }
+        .header-brand { display: flex; align-items: center; gap: 20px; }
         
         .header-brand i { 
-            font-size: 2rem; 
+            font-size: 2.2rem; 
             color: var(--accent);
+            filter: drop-shadow(0 0 10px var(--border-glow));
             animation: pulse-icon 2s infinite;
         }
 
         .header-title h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             letter-spacing: 2px;
-            margin-bottom: 2px;
+            background: linear-gradient(to right, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .header-title span {
-            font-size: 0.65rem;
-            color: var(--accent);
+            font-size: 0.7rem;
+            color: #8d6e63;
             text-transform: uppercase;
-            font-weight: bold;
+            letter-spacing: 1px;
         }
 
-        .header-stats {
-            display: flex;
-            gap: 20px;
-            background: rgba(0,0,0,0.3);
-            padding: 10px 20px;
-            border-radius: 5px;
-            border: 1px solid rgba(212, 163, 115, 0.2);
+        .header-stats { display: flex; gap: 15px; }
+
+        .stat-box { 
+            background: rgba(255,255,255,0.05);
+            padding: 8px 15px;
+            border-radius: 4px;
+            border-left: 3px solid var(--accent);
+            min-width: 120px;
         }
 
-        .stat-box { text-align: center; }
-        .stat-label { font-size: 0.6rem; color: #8d6e63; display: block; }
-        .stat-value { font-size: 0.9rem; font-weight: bold; color: #fff; }
-
-        /* --- CONTENT / IFRAME AREA --- */
-        .content { 
-            flex-grow: 1; 
-            position: relative;
-            background: #000;
-            margin: 10px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: inset 0 0 50px rgba(0,0,0,1);
-        }
-
-        iframe { 
-            width: 100%; 
-            height: calc(100% + 40px); /* Sesuai kompensasi margin sharepoint */
-            border: none; 
-            position: absolute; 
-            top: -20px; 
-        }
-
-        /* --- FOOTER --- */
-        .footer { 
-            background: #2b1d1a; 
-            color: #d7ccc8; 
-            padding: 12px 25px; 
-            display: flex; 
-            justify-content: space-between; 
-            font-size: 0.75rem;
-            font-weight: bold;
-            border-top: 1px solid #3e2723;
-        }
-
-        .status-active { color: #4CAF50; }
-        .status-active i { margin-right: 5px; }
-
-        @keyframes pulse-icon {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="header">
-        <div class="header-brand">
-            <i class="fas fa-microchip"></i>
-            <div class="header-title">
-                <h1>GRAFIK DATA ANALYTICS</h1>
-                <span>GA-Inventory-Tracking-Reach-Truk</span>
-            </div>
-        </div>
-
-        <div class="header-stats">
-            <div class="stat-box">
-                <span class="stat-label">TIME</span>
-                <span id="live-clock" class="stat-value">00:00:00</span>
-            </div>
-            <div class="stat-box">
-                <span class="stat-label">LAST UPDATE</span>
-                <span id="last-sync" class="stat-value">JUST NOW</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="content">
-        <iframe id="data-frame" src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=False&Item=Chart%201&wdHideSheetTabs=True&wdHideHeaders=True&wdDownloadButton=False">
-        </iframe>    
-    </div>
-
-    <div class="footer">
-        <div class="status-active">
-            <i class="fas fa-circle"></i> SYSTEM ONLINE
-        </div>
-        <div style="display: flex; gap: 40px;">
-            <span>MATERIAL CONTROL</span>
-            <span>GA INVENTORY</span>
-        </div>
-        <div id="live-date">--/--/----</div>
-    </div>
-
-    <script>
-        // Fungsi Jam Real-Time
-        function startClock() {
-            const clockEl = document.getElementById('live-clock');
-            const dateEl = document.getElementById('live-date');
-            
-            setInterval(() => {
-                const now = new Date();
-                clockEl.textContent = now.toLocaleTimeString('id-ID', { hour12: false });
-                dateEl.textContent = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
-            }, 1000);
-        }
-
-        // Fungsi Auto-Refresh Iframe (Hubungan Coding Langsung dengan Iframe)
-        // Menyegarkan grafik setiap 5 menit agar data SharePoint tetap update
-        function setupAutoRefresh() {
-            const iframe = document.getElementById('data-frame');
-            const syncEl = document.getElementById('last-sync');
-            
-            setInterval(() => {
-                const now = new Date();
-                iframe.src = iframe.src; // Memicu reload pada iframe saja
-                syncEl.textContent = now.getHours() + ":" + (now.getMinutes()<10?'0':'') + now.getMinutes();
-                console.log("Grafik diperbarui pada: " + now.toLocaleTimeString());
-            }, 300000); // 300.000 ms = 5 menit
-        }
-
-        // Jalankan semua fungsi
-        window.onload = () => {
-            startClock();
-            setupAutoRefresh();
-        };
-    </script>
-</body>
-</html>
+        .stat-label { font-size: 0.6rem; color: var(--accent); display: block; margin
