@@ -2,191 +2,72 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GA Inventory - Monitoring System</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <style>
-        :root {
-            --bg-dark: #050505;
-            --accent: #00ff41; 
-            --dim-accent: rgba(0, 255, 65, 0.2);
-        }
-
+        /* RESET & BASE */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body { 
-            font-family: 'Orbitron', sans-serif; 
-            background: var(--bg-dark); 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #0f172a; 
             height: 100vh; 
             display: flex; 
             flex-direction: column; 
             overflow: hidden; 
-            color: #fff;
         }
 
-        /* --- HEADER DENGAN ANIMASI HIASAN --- */
+        /* HEADER DASHBOARD */
         .header { 
-            height: 90px;
-            background: linear-gradient(180deg, #111 0%, #000 100%);
-            display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            align-items: center;
-            padding: 0 30px;
-            border-bottom: 2px solid #222;
-            position: relative;
+            background: linear-gradient(90deg, #1e293b, #334155); 
+            color: #38ef7d; 
+            padding: 15px; 
+            text-align: center; 
+            border-bottom: 2px solid #38ef7d;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        /* Animasi Garis Bergerak di Header */
-        .header::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
+        /* CONTAINER UNTUK IFRAME */
+        .chart-wrapper {
+            flex-grow: 1;
+            position: relative;
+            margin: 20px;
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden; /* Memotong scrollbar/header excel yang tidak perlu */
+            border: 5px solid rgba(255,255,255,0.1);
+        }
+
+        /* IFRAME ADJUSTMENT */
+        iframe {
             width: 100%;
-            height: 1px;
-            background: var(--accent);
-            box-shadow: 0 0 10px var(--accent);
-            animation: scan 3s linear infinite;
-        }
-
-        @keyframes scan {
-            0% { transform: scaleX(0); opacity: 0; }
-            50% { transform: scaleX(1); opacity: 1; }
-            100% { transform: scaleX(0); opacity: 0; }
-        }
-
-        .header-decor {
-            font-size: 0.6rem;
-            color: var(--dim-accent);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .clock-container {
-            text-align: center;
-        }
-
-        #live-clock {
-            font-size: 2.8rem;
-            font-weight: 700;
-            color: #fff;
-            text-shadow: 0 0 15px var(--dim-accent);
-            letter-spacing: 5px;
-        }
-
-        /* --- CONTAINER UTAMA (HILANGKAN TOOLBAR) --- */
-        .content { 
-            flex-grow: 1; 
-            position: relative;
-            background: #000;
-            overflow: hidden; 
-        }
-
-        /* Iframe ditarik ke atas dan tinggi dilebihkan untuk memotong toolbar hitam */
-        .iframe-wrapper {
-            position: absolute;
-            top: -45px; /* Memotong bar atas */
-            left: -10px;
-            width: calc(100% + 20px);
-            height: calc(100% + 95px); /* Memotong bar bawah (toolbar hitam) */
-        }
-
-        iframe { 
-            width: 100%; 
-            height: 100%; 
+            height: 100%; /* Sesuaikan jika ingin memotong bagian tertentu */
             border: none;
-            filter: contrast(110%) brightness(100%);
         }
 
-        /* Overlay untuk mencegah klik tidak sengaja pada Excel */
-        .interaction-blocker {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            background: transparent;
-        }
-
-        .footer { 
-            background: #000;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            font-size: 0.55rem;
-            color: #444;
-            justify-content: space-between;
-            border-top: 1px solid #111;
+        /* FOOTER KETERANGAN */
+        .footer {
+            background: rgba(0,0,0,0.5);
+            color: #94a3b8;
+            padding: 10px;
+            font-size: 11px;
+            text-align: center;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
 
-    <header class="header">
-        <div class="header-decor">
-            <i class="fas fa-microchip"></i> System-A.I Status: Active<br>
-            <i class="fas fa-network-wired"></i> Data Link: Secure
-        </div>
+    <div class="header">
+        <h1>📊 DATA ANALYTICS PERFORMANCE</h1>
+    </div>
 
-        <div class="clock-container">
-            <div id="live-clock">00:00:00</div>
-        </div>
+    <div class="chart-wrapper">
+        <iframe 
+            src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=False&Item=Chart%201&wdHideSheetTabs=True&wdHideHeaders=True&wdDownloadButton=False">
+        </iframe>
+    </div>
 
-        <div class="header-decor" style="text-align: right;">
-            Terminal ID: GA-INV-01<br>
-            <span id="uptime-label">Uptime: 00:00:00</span>
-        </div>
-    </header>
+    <div class="footer">
+        AUTO-REFRESH VIA SHAREPOINT SERVER • POLYTRON GA SYSTEM 2026
+    </div>
 
-    <main class="content">
-        <div class="interaction-blocker"></div>
-        
-        <div class="iframe-wrapper">
-            <iframe id="data-frame" src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=False&Item=Chart%201&wdHideSheetTabs=True&wdHideHeaders=True&wdDownloadButton=False&wdHideGridlines=True"></iframe>
-        </div>
-    </main>
-
-    <footer class="footer">
-        <div>POLYTRON MATERIAL CONTROL UNIT</div>
-        <div id="sync-status">LAST SYNC: JUST NOW</div>
-    </footer>
-
-    <script>
-        let startTime = Date.now();
-
-        function update() {
-            const now = new Date();
-            // Jam Utama
-            document.getElementById('live-clock').textContent = now.toLocaleTimeString('id-ID', { 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit', 
-                hour12: false 
-            }).replace(/\./g, ':');
-
-            // Uptime hiasan
-            let diff = Math.floor((Date.now() - startTime) / 1000);
-            let h = Math.floor(diff / 3600).toString().padStart(2, '0');
-            let m = Math.floor((diff % 3600) / 60).toString().padStart(2, '0');
-            let s = (diff % 60).toString().padStart(2, '0');
-            document.getElementById('uptime-label').textContent = `Uptime: ${h}:${m}:${s}`;
-        }
-
-        // Auto Refresh Data (Setiap 5 Menit)
-        setInterval(() => {
-            const iframe = document.getElementById('data-frame');
-            iframe.src = iframe.src;
-            const now = new Date();
-            document.getElementById('sync-status').textContent = "LAST SYNC: " + now.toLocaleTimeString();
-        }, 300000);
-
-        setInterval(update, 1000);
-        update();
-    </script>
 </body>
 </html>
