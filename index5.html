@@ -2,9 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GA Inventory Tracking - Real Time Dashboard</title>
+    <title>GA Inventory Dashboard - Clean View</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -14,7 +13,6 @@
             --primary: #3e2723;
             --accent: #d4a373;
             --dark-panel: #1a120b;
-            --border-glow: rgba(212, 163, 115, 0.3);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,207 +23,89 @@
             height: 100vh; 
             display: flex; 
             flex-direction: column; 
-            color: #fff;
-            overflow: hidden;
+            overflow: hidden; 
         }
 
         /* --- HEADER --- */
-        /* .header { 
-            height: 85px;
-            background: linear-gradient(180deg, #2b1d1a 0%, #1a120b 100%);
+        .header { 
+            height: 70px;
+            background: #2b1d1a;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 30px;
+            padding: 0 25px;
             border-bottom: 2px solid var(--accent);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             z-index: 10;
         }
 
-        .header-brand { display: flex; align-items: center; gap: 20px; }
-        
-        .header-brand i { 
-            font-size: 2.2rem; 
-            color: var(--accent);
-            filter: drop-shadow(0 0 10px var(--border-glow));
-            animation: pulse-icon 2s infinite;
-        }
+        .header-brand { display: flex; align-items: center; gap: 15px; }
+        .header-brand i { font-size: 1.8rem; color: var(--accent); }
+        .header-title h1 { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: #fff; }
 
-        .header-title h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.3rem;
-            letter-spacing: 2px;
-            background: linear-gradient(to right, #fff, var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .header-title span {
-            font-size: 0.7rem;
-            color: #8d6e63;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .header-stats { display: flex; gap: 15px; }
-
-        .stat-box { 
-            background: rgba(255,255,255,0.05);
-            padding: 8px 15px;
-            border-radius: 4px;
-            border-left: 3px solid var(--accent);
-            min-width: 120px;
-        }
-
-        .stat-label { font-size: 0.6rem; color: var(--accent); display: block; margin-bottom: 2px; }
-        .stat-value { font-size: 1rem; font-weight: bold; font-family: 'Orbitron', sans-serif; } */
-
-        /* --- CONTENT AREA --- */
+        /* --- CONTAINER STRATEGI HILANGKAN TOOLBAR --- */
         .content { 
             flex-grow: 1; 
             position: relative;
-            background: #f4f4f4; /* Background terang agar kontras dengan grafik */
-            margin: 15px;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-glow);
-            box-shadow: 0 0 40px rgba(0,0,0,0.4);
+            background: #fff;
+            margin: 10px;
+            border-radius: 8px;
+            /* overflow: hidden adalah kunci untuk clipping */
+            overflow: hidden; 
+            border: 1px solid #3e2723;
         }
 
-        /* Wrapper untuk menyembunyikan navigasi SharePoint */
-        .iframe-container {
+        .iframe-wrapper {
             position: absolute;
-            top: -38px; /* Menyesuaikan header SharePoint */
+            /* Menarik iframe ke atas dan membuatnya lebih tinggi untuk membuang toolbar bawah */
+            top: -40px; 
             left: 0;
             width: 100%;
-            height: calc(100% + 38px);
+            height: calc(100% + 85px); /* Menambah tinggi agar toolbar bawah terdorong keluar area pandang */
         }
 
         iframe { 
             width: 100%; 
             height: 100%; 
             border: none; 
-            transition: opacity 0.5s ease;
         }
 
-        /* --- FOOTER --- */
         .footer { 
-            background: #000; 
-            color: #d7ccc8; 
-            padding: 10px 30px; 
+            background: #1a120b; 
+            padding: 8px 25px; 
             display: flex; 
             justify-content: space-between; 
-            align-items: center;
-            font-size: 0.8rem;
-            border-top: 1px solid #3e2723;
-        }
-
-        .status-tag {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(76, 175, 80, 0.1);
-            padding: 5px 12px;
-            border-radius: 20px;
-            color: #4CAF50;
-            border: 1px solid rgba(76, 175, 80, 0.3);
-        }
-
-        .dot {
-            height: 8px; width: 8px;
-            background-color: #4CAF50;
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 10px #4CAF50;
-        }
-
-        @keyframes pulse-icon {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 1; }
+            font-size: 0.7rem; 
+            color: #8d6e63;
         }
     </style>
 </head>
 <body>
 
-    <!-- <div class="header">
+    <div class="header">
         <div class="header-brand">
-            <i class="fas fa-chart-pie"></i>
+            <i class="fas fa-chart-area"></i>
             <div class="header-title">
-                <h1>DATA ANALYTICS</h1>
-                <span>GA-Inventory-Tracking-Reach-Truk</span>
+                <h1>ANALYTICS DASHBOARD</h1>
             </div>
         </div>
-
-        <div class="header-stats">
-            <div class="stat-box">
-                <span class="stat-label"><i class="far fa-clock"></i> LIVE TIME</span>
-                <span id="live-clock" class="stat-value">00:00:00</span>
-            </div>
-            <div class="stat-box">
-                <span class="stat-label"><i class="fas fa-sync-alt"></i> LAST SYNC</span>
-                <span id="last-sync" class="stat-value">INITIALIZING</span>
-            </div>
-        </div>
-    </div> -->
+        <div id="clock" style="font-family: 'Orbitron'; color: var(--accent);">00:00:00</div>
+    </div>
 
     <div class="content">
-        <div class="iframe-container">
-            <iframe id="data-frame" src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=False&Item=Chart%201&wdHideSheetTabs=True&wdHideHeaders=True&wdDownloadButton=False"></iframe>
+        <div class="iframe-wrapper">
+            <iframe id="data-frame" src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=False&Item=Chart%201&wdHideSheetTabs=True&wdHideHeaders=True&wdDownloadButton=False&wdHideGridlines=True"></iframe>
         </div>
     </div>
 
     <div class="footer">
-        <div class="status-tag">
-            <span class="dot"></span> SYSTEM ONLINE
-        </div>
-        <div style="letter-spacing: 2px;">
-            MATERIAL CONTROL <span style="color:var(--accent)">|</span> GA INVENTORY
-        </div>
-        <div id="live-date">--/--/----</div>
+        <div><i class="fas fa-circle" style="color: #4CAF50;"></i> SYSTEM ACTIVE</div>
+        <div>GA INVENTORY TRACKING</div>
     </div>
 
     <script>
-        // Inisialisasi Jam
-        function startClock() {
-            const clockEl = document.getElementById('live-clock');
-            const dateEl = document.getElementById('live-date');
-            const syncEl = document.getElementById('last-sync');
-            
-            // Set sync awal
-            syncEl.textContent = new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
-
-            setInterval(() => {
-                const now = new Date();
-                clockEl.textContent = now.toLocaleTimeString('id-ID', { hour12: false });
-                dateEl.textContent = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
-            }, 1000);
-        }
-
-        // Auto Refresh Logic
-        function setupAutoRefresh() {
-            const iframe = document.getElementById('data-frame');
-            const syncEl = document.getElementById('last-sync');
-            
-            setInterval(() => {
-                // Efek transisi halus saat refresh
-                iframe.style.opacity = '0';
-                
-                setTimeout(() => {
-                    iframe.src = iframe.src; 
-                    iframe.style.opacity = '1';
-                    
-                    const now = new Date();
-                    syncEl.textContent = now.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
-                }, 500);
-
-            }, 300000); // Setiap 5 menit
-        }
-
-        window.onload = () => {
-            startClock();
-            setupAutoRefresh();
-        };
+        setInterval(() => {
+            document.getElementById('clock').textContent = new Date().toLocaleTimeString('id-ID');
+        }, 1000);
     </script>
 </body>
 </html>
