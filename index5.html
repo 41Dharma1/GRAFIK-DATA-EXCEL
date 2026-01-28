@@ -16,63 +16,56 @@
         .header { 
             background: linear-gradient(90deg, #1e293b, #334155); 
             color: #38ef7d; 
-            padding: 15px; 
+            padding: 12px; 
             text-align: center; 
-            border-bottom: 2px solid #38ef7d;
+            border-bottom: 3px solid #38ef7d;
+            font-size: 14px;
         }
 
-        /* CONTAINER SEBAGAI PEMOTONG (CROPPER) */
-        .chart-container {
+        /* Bingkai Luar */
+        .chart-viewport {
             flex-grow: 1;
             margin: 20px;
             background: white;
             border-radius: 15px;
             position: relative;
-            
-            /* KUNCI: Sembunyikan apapun yang keluar dari batas ini */
+            /* Memotong toolbar yang keluar dari batas ini */
             overflow: hidden; 
-            border: 5px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* IFRAME ADJUSTMENT */
         iframe {
             position: absolute;
-            width: 100%;
-            
-            /* Trik 1: Dorong tinggi iframe melebihi container */
-            height: calc(100% + 45px); 
-            
-            /* Trik 2: Geser posisi ke atas untuk membuang toolbar hitam di bawah */
-            /* Jika toolbar ada di atas, gunakan top: -40px */
-            /* Jika toolbar ada di bawah (seperti gambar), biarkan top: 0 dan tinggi yang dilebihkan */
-            top: 0; 
+            top: 0;
             left: 0;
+            width: 100%;
+            /* Dibuat lebih tinggi agar toolbar hitam terdorong ke bawah area potong */
+            height: calc(100% + 45px); 
             border: none;
         }
 
-        .footer {
-            background: rgba(0,0,0,0.5);
-            color: #94a3b8;
+        .footer-info {
+            background: rgba(0,0,0,0.3);
+            color: #64748b;
             padding: 8px;
-            font-size: 11px;
             text-align: center;
+            font-size: 10px;
+            text-transform: uppercase;
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>📊 DATA ANALYTICS PERFORMANCE</h1>
+        <h2>REAL-TIME DATA ANALYTICS DASHBOARD</h2>
     </div>
 
-    <div class="chart-container">
-        <iframe 
-            src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=False&Item=Chart%201&wdHideSheetTabs=True&wdHideHeaders=True&wdDownloadButton=False">
-        </iframe>
+    <div class="chart-viewport">
+        <iframe src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=False&Item=Chart%201&wdHideSheetTabs=True&wdHideHeaders=True&wdDownloadButton=False"></iframe>
     </div>
 
-    <div class="footer">
-        POLYTRON GA SYSTEM • DASHBOARD MODE ACTIVE
+    <div class="footer-info">
+        Data Source: SharePoint Online • Auto-Refresh Enabled
     </div>
 
 </body>
