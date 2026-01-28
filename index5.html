@@ -1,186 +1,83 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GA Inventory - Monitoring System</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --bg-dark: #0a0a0a;
-            --panel-bg: #1a1a1a;
-            --accent: #d4a373;
-            --green: #00ff41; /* Matrix/System Green */
-        }
+<style>
+    /* --- CSS UPDATES --- */
+    .header { 
+        height: 70px; /* Sedikit lebih tinggi agar lega */
+        background: rgba(0, 0, 0, 0.9);
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr; /* Membagi header jadi 3 bagian sama besar */
+        align-items: center;
+        padding: 0 20px;
+        border-bottom: 1px solid #333;
+    }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+    .monitor-left {
+        display: flex;
+        gap: 25px;
+        font-size: 0.75rem;
+    }
 
-        body { 
-            font-family: 'Roboto Mono', monospace; 
-            background: var(--bg-dark); 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; 
-            color: #fff;
-        }
+    /* Jam sekarang di tengah */
+    .header-center {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 2px;
+    }
 
-        /* --- MINIMALIST MONITOR HEADER --- */
-        .header { 
-            height: 60px;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            border-bottom: 1px solid #333;
-        }
+    #live-clock {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.8rem; /* Ukuran lebih besar karena jadi pusat perhatian */
+        color: #fff;
+        line-height: 1;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
 
-        .monitor-left {
-            display: flex;
-            gap: 25px;
-            font-size: 0.75rem;
-            color: #888;
-        }
+    #live-date {
+        font-size: 0.7rem;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
 
-        .monitor-item { display: flex; flex-direction: column; }
-        .monitor-label { color: var(--accent); font-size: 0.6rem; font-weight: bold; }
-        .monitor-value { color: #eee; }
+    .monitor-right {
+        display: flex;
+        justify-content: flex-end;
+    }
 
-        .header-center {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-        }
+    .system-status {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        color: var(--green);
+        text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+        border: 1px solid var(--green);
+        padding: 5px 15px;
+        border-radius: 4px;
+    }
+</style>
 
-        .system-status {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            color: var(--green);
-            text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
-        }
-
-        .monitor-right {
-            text-align: right;
-            border-left: 1px solid #333;
-            padding-left: 20px;
-        }
-
-        #live-clock {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            color: #fff;
-            line-height: 1;
-        }
-
-        #live-date {
-            font-size: 0.65rem;
-            color: var(--accent);
-            text-transform: uppercase;
-        }
-
-        /* --- CONTENT AREA (HIDDEN TOOLBAR LOGIC) --- */
-        .content { 
-            flex-grow: 1; 
-            position: relative;
-            background: #fff;
-            overflow: hidden; /* Penting untuk clipping toolbar */
-        }
-
-        .iframe-wrapper {
-            position: absolute;
-            /* Memotong toolbar atas (-45px) dan bawah (tinggi dilebihkan) */
-            top: -45px; 
-            left: 0;
-            width: 100%;
-            height: calc(100% + 95px); 
-        }
-
-        iframe { 
-            width: 100%; 
-            height: 100%; 
-            border: none; 
-        }
-
-        /* --- STATUS BAR BOTTOM --- */
-        .footer { 
-            background: var(--panel-bg);
-            height: 25px;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            font-size: 0.65rem;
-            color: #555;
-            justify-content: space-between;
-        }
-    </style>
-</head>
-<body>
-
-    <header class="header">
-        <div class="monitor-left">
-            <div class="monitor-item">
-                <span class="monitor-label">STATUS</span>
-                <span class="monitor-value"><i class="fas fa-network-wired"></i> CONNECTED</span>
-            </div>
-            <div class="monitor-item">
-                <span class="monitor-label">UPTIME</span>
-                <span id="uptime" class="monitor-value">00:00:00</span>
-            </div>
+<header class="header">
+    <div class="monitor-left">
+        <div class="monitor-item">
+            <span class="monitor-label">STATUS</span>
+            <span class="monitor-value"><i class="fas fa-network-wired"></i> CONNECTED</span>
         </div>
-
-        <div class="monitor-right">
-            <div id="live-clock">00:00:00</div>
-            <div id="live-date">LOADING...</div>
+        <div class="monitor-item">
+            <span class="monitor-label">UPTIME</span>
+            <span id="uptime" class="monitor-value">00:00:00</span>
         </div>
-    </header>
+    </div>
 
-    <main class="content">
-        <div class="iframe-wrapper">
-            <iframe id="data-frame" src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=False&Item=Chart%201&wdHideSheetTabs=True&wdHideHeaders=True&wdDownloadButton=False&wdHideGridlines=True"></iframe>
+    <div class="header-center">
+        <div id="live-clock">00:00:00</div>
+        <div id="live-date">LOADING...</div>
+    </div>
+
+    <div class="monitor-right">
+        <div class="system-status">
+            <i class="fas fa-microchip"></i> SYSTEM ACTIVE
         </div>
-    </main>
-
-    <footer class="footer">
-        <div>MATERIAL CONTROL UNIT</div>
-        <div>GA INVENTORY TRACKING SYSTEM &copy; 2026</div>
-    </footer>
-
-    <script>
-        // Inisialisasi Jam & Uptime
-        let startTime = Date.now();
-
-        function updateMonitor() {
-            const now = new Date();
-            
-            // Jam Digital
-            document.getElementById('live-clock').textContent = now.toLocaleTimeString('id-ID', { hour12: false });
-            
-            // Tanggal
-            document.getElementById('live-date').textContent = now.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
-
-            // Uptime Calculation
-            let diff = Math.floor((Date.now() - startTime) / 1000);
-            let h = Math.floor(diff / 3600).toString().padStart(2, '0');
-            let m = Math.floor((diff % 3600) / 60).toString().padStart(2, '0');
-            let s = (diff % 60).toString().padStart(2, '0');
-            document.getElementById('uptime').textContent = `${h}:${m}:${s}`;
-        }
-
-        // Auto Refresh Iframe (5 Menit)
-        setInterval(() => {
-            const iframe = document.getElementById('data-frame');
-            iframe.src = iframe.src;
-            console.log("System Sync: Data Updated");
-        }, 300000);
-
-        setInterval(updateMonitor, 1000);
-        updateMonitor();
-    </script>
-</body>
-</html>
+    </div>
+</header>
