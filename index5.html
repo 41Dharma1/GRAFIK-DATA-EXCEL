@@ -77,4 +77,155 @@
             min-width: 120px;
         }
 
-        .stat-label { font-size: 0.6rem; color: var(--accent); display: block; margin
+        .stat-label { font-size: 0.6rem; color: var(--accent); display: block; margin-bottom: 2px; }
+        .stat-value { font-size: 1rem; font-weight: bold; font-family: 'Orbitron', sans-serif; }
+
+        /* --- CONTENT AREA --- */
+        .content { 
+            flex-grow: 1; 
+            position: relative;
+            background: #f4f4f4; /* Background terang agar kontras dengan grafik */
+            margin: 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-glow);
+            box-shadow: 0 0 40px rgba(0,0,0,0.4);
+        }
+
+        /* Wrapper untuk menyembunyikan navigasi SharePoint */
+        .iframe-container {
+            position: absolute;
+            top: -38px; /* Menyesuaikan header SharePoint */
+            left: 0;
+            width: 100%;
+            height: calc(100% + 38px);
+        }
+
+        iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: none; 
+            transition: opacity 0.5s ease;
+        }
+
+        /* --- FOOTER --- */
+        .footer { 
+            background: #000; 
+            color: #d7ccc8; 
+            padding: 10px 30px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            font-size: 0.8rem;
+            border-top: 1px solid #3e2723;
+        }
+
+        .status-tag {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(76, 175, 80, 0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            color: #4CAF50;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .dot {
+            height: 8px; width: 8px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 10px #4CAF50;
+        }
+
+        @keyframes pulse-icon {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-brand">
+            <i class="fas fa-chart-pie"></i>
+            <div class="header-title">
+                <h1>DATA ANALYTICS</h1>
+                <span>GA-Inventory-Tracking-Reach-Truk</span>
+            </div>
+        </div>
+
+        <div class="header-stats">
+            <div class="stat-box">
+                <span class="stat-label"><i class="far fa-clock"></i> LIVE TIME</span>
+                <span id="live-clock" class="stat-value">00:00:00</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label"><i class="fas fa-sync-alt"></i> LAST SYNC</span>
+                <span id="last-sync" class="stat-value">INITIALIZING</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="iframe-container">
+            <iframe id="data-frame" src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=False&Item=Chart%201&wdHideSheetTabs=True&wdHideHeaders=True&wdDownloadButton=False"></iframe>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="status-tag">
+            <span class="dot"></span> SYSTEM ONLINE
+        </div>
+        <div style="letter-spacing: 2px;">
+            MATERIAL CONTROL <span style="color:var(--accent)">|</span> GA INVENTORY
+        </div>
+        <div id="live-date">--/--/----</div>
+    </div>
+
+    <script>
+        // Inisialisasi Jam
+        function startClock() {
+            const clockEl = document.getElementById('live-clock');
+            const dateEl = document.getElementById('live-date');
+            const syncEl = document.getElementById('last-sync');
+            
+            // Set sync awal
+            syncEl.textContent = new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
+
+            setInterval(() => {
+                const now = new Date();
+                clockEl.textContent = now.toLocaleTimeString('id-ID', { hour12: false });
+                dateEl.textContent = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+            }, 1000);
+        }
+
+        // Auto Refresh Logic
+        function setupAutoRefresh() {
+            const iframe = document.getElementById('data-frame');
+            const syncEl = document.getElementById('last-sync');
+            
+            setInterval(() => {
+                // Efek transisi halus saat refresh
+                iframe.style.opacity = '0';
+                
+                setTimeout(() => {
+                    iframe.src = iframe.src; 
+                    iframe.style.opacity = '1';
+                    
+                    const now = new Date();
+                    syncEl.textContent = now.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
+                }, 500);
+
+            }, 300000); // Setiap 5 menit
+        }
+
+        window.onload = () => {
+            startClock();
+            setupAutoRefresh();
+        };
+    </script>
+</body>
+</html>
