@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* 1. RESET DEFAULT MARGIN */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #ffffff; 
+            height: 100vh; 
+            width: 100vw;
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+        }
+
+        /* 2. AREA GRAFIK (FULL SCREEN) */
+        .graph-wrapper {
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+            overflow: hidden; /* Memotong bagian yang berlebih */
+        }
+
+        /* 3. SETTING IFRAME AGAR ZOOM & CLEAN */
+        iframe {
+            position: absolute;
+            /* Menarik ke atas & kiri untuk membuang spasi kosong bawaan Excel */
+            top: -10px; 
+            left: -10px;
+            
+            /* Lebar & Tinggi dilebihkan agar toolbar bawah & scrollbar tersembunyi */
+            width: calc(100% + 20px); 
+            height: calc(100% + 60px); 
+            
+            border: none;
+        }
+
+        /* Overlay transparan jika ingin mencegah user klik-klik di dalam grafik */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            background: rgba(255, 255, 255, 0); /* Transparan */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="graph-wrapper">
+        <div class="overlay"></div>
+
+        <iframe 
+            src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=False&Item=Chart%201&wdHideSheetTabs=True&wdHideHeaders=True&wdDownloadButton=False">
+        </iframe>
+    </div>
+
+</body>
+</html>
