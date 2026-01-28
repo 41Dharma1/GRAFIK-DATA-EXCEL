@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        /* RESET & BASE */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: 'Segoe UI', sans-serif; 
@@ -23,34 +22,38 @@
         }
 
         /* CONTAINER SEBAGAI PEMOTONG (CROPPER) */
-        .chart-wrapper {
+        .chart-container {
             flex-grow: 1;
-            position: relative;
             margin: 20px;
-            background: #fff;
+            background: white;
             border-radius: 15px;
-            /* overflow: hidden sangat penting untuk memotong toolbar */
+            position: relative;
+            
+            /* KUNCI: Sembunyikan apapun yang keluar dari batas ini */
             overflow: hidden; 
             border: 5px solid rgba(255,255,255,0.1);
         }
 
-        /* TEKNIK MENGHILANGKAN TOOLBAR */
+        /* IFRAME ADJUSTMENT */
         iframe {
             position: absolute;
-            /* Menarik iframe sedikit ke atas jika ada toolbar di atas */
+            width: 100%;
+            
+            /* Trik 1: Dorong tinggi iframe melebihi container */
+            height: calc(100% + 45px); 
+            
+            /* Trik 2: Geser posisi ke atas untuk membuang toolbar hitam di bawah */
+            /* Jika toolbar ada di atas, gunakan top: -40px */
+            /* Jika toolbar ada di bawah (seperti gambar), biarkan top: 0 dan tinggi yang dilebihkan */
             top: 0; 
             left: 0;
-            width: 100%;
-            /* Membuat iframe lebih tinggi dari kontainernya (misal +40px) 
-               agar toolbar di bagian bawah terdorong keluar dari area potong */
-            height: calc(100% + 40px); 
             border: none;
         }
 
         .footer {
             background: rgba(0,0,0,0.5);
             color: #94a3b8;
-            padding: 10px;
+            padding: 8px;
             font-size: 11px;
             text-align: center;
         }
@@ -62,14 +65,14 @@
         <h1>📊 DATA ANALYTICS PERFORMANCE</h1>
     </div>
 
-    <div class="chart-wrapper">
+    <div class="chart-container">
         <iframe 
             src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=False&Item=Chart%201&wdHideSheetTabs=True&wdHideHeaders=True&wdDownloadButton=False">
         </iframe>
     </div>
 
     <div class="footer">
-        AUTO-REFRESH VIA SHAREPOINT SERVER • POLYTRON GA SYSTEM
+        POLYTRON GA SYSTEM • DASHBOARD MODE ACTIVE
     </div>
 
 </body>
