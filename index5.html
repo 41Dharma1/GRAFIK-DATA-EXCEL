@@ -28,54 +28,51 @@
             color: #fff;
         }
 
-        /* --- HEADER WITH CENTERED CLOCK --- */
+        /* --- HEADER: CLOCK IN THE CENTER --- */
         .header { 
             height: 80px;
             background: rgba(0, 0, 0, 0.95);
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr; /* Membagi 3 kolom sama rata */
+            grid-template-columns: 1fr auto 1fr; /* Memastikan kolom tengah pas dengan ukuran kontennya */
             align-items: center;
             padding: 0 30px;
             border-bottom: 2px solid #333;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
-        /* Bagian Kiri: Status & Uptime */
+        /* Kiri: Status Info */
         .monitor-left {
             display: flex;
-            gap: 30px;
+            gap: 25px;
         }
 
         .monitor-item { display: flex; flex-direction: column; }
-        .monitor-label { color: var(--accent); font-size: 0.65rem; font-weight: bold; letter-spacing: 1px; }
-        .monitor-value { color: #eee; font-size: 0.85rem; margin-top: 2px; }
+        .monitor-label { color: var(--accent); font-size: 0.6rem; font-weight: bold; letter-spacing: 1px; }
+        .monitor-value { color: #eee; font-size: 0.8rem; }
 
-        /* Bagian Tengah: Jam Digital (Utama) */
+        /* Tengah: Jam Digital Utama */
         .header-center {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            text-align: center;
+            min-width: 300px;
         }
 
         #live-clock {
             font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
+            font-size: 2.2rem;
             color: #fff;
             line-height: 1;
-            letter-spacing: 3px;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            letter-spacing: 4px;
+            font-weight: 700;
         }
 
         #live-date {
             font-size: 0.7rem;
             color: var(--accent);
             text-transform: uppercase;
-            margin-top: 5px;
+            margin-top: 4px;
             letter-spacing: 2px;
         }
 
-        /* Bagian Kanan: System ID / Logo */
+        /* Kanan: System ID */
         .monitor-right {
             display: flex;
             justify-content: flex-end;
@@ -83,29 +80,29 @@
 
         .system-badge {
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--green);
             border: 1px solid var(--green);
-            padding: 6px 15px;
-            border-radius: 2px;
-            background: rgba(0, 255, 65, 0.05);
+            padding: 5px 12px;
+            letter-spacing: 1px;
         }
 
-        /* --- CONTENT AREA --- */
+        /* --- CONTENT AREA (CLIPPING TOOLBAR) --- */
         .content { 
             flex-grow: 1; 
             position: relative;
-            background: #fff;
-            overflow: hidden;
+            background: #000; /* Background hitam agar seamless jika ada gap */
+            overflow: hidden; 
         }
 
         .iframe-wrapper {
             position: absolute;
-            /* Memotong toolbar bawaan SharePoint */
-            top: -45px; 
+            /* Memotong toolbar atas dan bawah SharePoint yang mengganggu */
+            top: -30px; 
             left: 0;
             width: 100%;
-            height: calc(100% + 95px); 
+            /* Tinggi dilebihkan dan posisi ditarik ke atas untuk menyembunyikan bar hitam di gambar */
+            height: calc(100% + 65px); 
         }
 
         iframe { 
@@ -117,14 +114,13 @@
         /* --- FOOTER --- */
         .footer { 
             background: var(--panel-bg);
-            height: 30px;
+            height: 25px;
             display: flex;
             align-items: center;
             padding: 0 20px;
-            font-size: 0.65rem;
-            color: #666;
+            font-size: 0.6rem;
+            color: #555;
             justify-content: space-between;
-            border-top: 1px solid #333;
         }
     </style>
 </head>
@@ -133,11 +129,11 @@
     <header class="header">
         <div class="monitor-left">
             <div class="monitor-item">
-                <span class="monitor-label"><i class="fas fa-signal"></i> NETWORK</span>
-                <span class="monitor-value" style="color: var(--green);">ONLINE</span>
+                <span class="monitor-label">SYSTEM STATUS</span>
+                <span class="monitor-value"><i class="fas fa-check-circle" style="color: var(--green);"></i> ONLINE</span>
             </div>
             <div class="monitor-item">
-                <span class="monitor-label"><i class="fas fa-history"></i> UPTIME</span>
+                <span class="monitor-label">UPTIME</span>
                 <span id="uptime" class="monitor-value">00:00:00</span>
             </div>
         </div>
@@ -148,9 +144,7 @@
         </div>
 
         <div class="monitor-right">
-            <div class="system-badge">
-                <i class="fas fa-shield-alt"></i> GA-SYSTEM v2.6
-            </div>
+            <div class="system-badge">GA-MONITOR v2.0</div>
         </div>
     </header>
 
@@ -161,12 +155,11 @@
     </main>
 
     <footer class="footer">
-        <div><i class="fas fa-warehouse"></i> MATERIAL CONTROL UNIT - POLYTRON</div>
-        <div>GA INVENTORY TRACKING &copy; 2026</div>
+        <div>MATERIAL CONTROL UNIT</div>
+        <div>GA INVENTORY TRACKING SYSTEM &copy; 2026</div>
     </footer>
 
     <script>
-        // Inisialisasi Jam & Uptime
         let startTime = Date.now();
 
         function updateMonitor() {
@@ -176,7 +169,7 @@
             document.getElementById('live-clock').textContent = now.toLocaleTimeString('id-ID', { 
                 hour: '2-digit', 
                 minute: '2-digit', 
-                second: '2-digit',
+                second: '2-digit', 
                 hour12: false 
             });
             
@@ -188,7 +181,7 @@
                 year: 'numeric' 
             });
 
-            // Uptime Calculation
+            // Uptime
             let diff = Math.floor((Date.now() - startTime) / 1000);
             let h = Math.floor(diff / 3600).toString().padStart(2, '0');
             let m = Math.floor((diff % 3600) / 60).toString().padStart(2, '0');
@@ -196,11 +189,10 @@
             document.getElementById('uptime').textContent = `${h}:${m}:${s}`;
         }
 
-        // Auto Refresh Iframe (Setiap 5 Menit)
+        // Refresh Data setiap 5 menit
         setInterval(() => {
             const iframe = document.getElementById('data-frame');
             iframe.src = iframe.src;
-            console.log("Data Auto-Synced at: " + new Date().toLocaleTimeString());
         }, 300000);
 
         setInterval(updateMonitor, 1000);
