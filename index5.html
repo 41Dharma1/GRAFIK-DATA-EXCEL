@@ -3,64 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GA Inventory Dashboard - Clean View</title>
+    <title>GA Inventory - Monitoring System</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
-            --primary: #3e2723;
+            --bg-dark: #0a0a0a;
+            --panel-bg: #1a1a1a;
             --accent: #d4a373;
-            --dark-panel: #1a120b;
+            --green: #00ff41; /* Matrix/System Green */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body { 
             font-family: 'Roboto Mono', monospace; 
-            background: var(--dark-panel); 
+            background: var(--bg-dark); 
             height: 100vh; 
             display: flex; 
             flex-direction: column; 
             overflow: hidden; 
+            color: #fff;
         }
 
-        /* --- HEADER --- */
+        /* --- MINIMALIST MONITOR HEADER --- */
         .header { 
-            height: 70px;
-            background: #2b1d1a;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.9);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 25px;
-            border-bottom: 2px solid var(--accent);
-            z-index: 10;
+            padding: 0 20px;
+            border-bottom: 1px solid #333;
         }
 
-        .header-brand { display: flex; align-items: center; gap: 15px; }
-        .header-brand i { font-size: 1.8rem; color: var(--accent); }
-        .header-title h1 { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: #fff; }
+        .monitor-left {
+            display: flex;
+            gap: 25px;
+            font-size: 0.75rem;
+            color: #888;
+        }
 
-        /* --- CONTAINER STRATEGI HILANGKAN TOOLBAR --- */
+        .monitor-item { display: flex; flex-direction: column; }
+        .monitor-label { color: var(--accent); font-size: 0.6rem; font-weight: bold; }
+        .monitor-value { color: #eee; }
+
+        .header-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .system-status {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            color: var(--green);
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+        }
+
+        .monitor-right {
+            text-align: right;
+            border-left: 1px solid #333;
+            padding-left: 20px;
+        }
+
+        #live-clock {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: #fff;
+            line-height: 1;
+        }
+
+        #live-date {
+            font-size: 0.65rem;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+
+        /* --- CONTENT AREA (HIDDEN TOOLBAR LOGIC) --- */
         .content { 
             flex-grow: 1; 
             position: relative;
             background: #fff;
-            margin: 10px;
-            border-radius: 8px;
-            /* overflow: hidden adalah kunci untuk clipping */
-            overflow: hidden; 
-            border: 1px solid #3e2723;
+            overflow: hidden; /* Penting untuk clipping toolbar */
         }
 
         .iframe-wrapper {
             position: absolute;
-            /* Menarik iframe ke atas dan membuatnya lebih tinggi untuk membuang toolbar bawah */
-            top: -40px; 
+            /* Memotong toolbar atas (-45px) dan bawah (tinggi dilebihkan) */
+            top: -45px; 
             left: 0;
             width: 100%;
-            height: calc(100% + 85px); /* Menambah tinggi agar toolbar bawah terdorong keluar area pandang */
+            height: calc(100% + 95px); 
         }
 
         iframe { 
@@ -69,43 +107,88 @@
             border: none; 
         }
 
+        /* --- STATUS BAR BOTTOM --- */
         .footer { 
-            background: #1a120b; 
-            padding: 8px 25px; 
-            display: flex; 
-            justify-content: space-between; 
-            font-size: 0.7rem; 
-            color: #8d6e63;
+            background: var(--panel-bg);
+            height: 25px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 0.65rem;
+            color: #555;
+            justify-content: space-between;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="header-brand">
-            <i class="fas fa-chart-area"></i>
-            <div class="header-title">
-                <h1>ANALYTICS DASHBOARD</h1>
+    <header class="header">
+        <div class="monitor-left">
+            <div class="monitor-item">
+                <span class="monitor-label">STATUS</span>
+                <span class="monitor-value"><i class="fas fa-network-wired"></i> CONNECTED</span>
+            </div>
+            <div class="monitor-item">
+                <span class="monitor-label">UPTIME</span>
+                <span id="uptime" class="monitor-value">00:00:00</span>
+            </div>
+            <div class="monitor-item">
+                <span class="monitor-label">ENGINE</span>
+                <span class="monitor-value">V.3.0.FLASH</span>
             </div>
         </div>
-        <div id="clock" style="font-family: 'Orbitron'; color: var(--accent);">00:00:00</div>
-    </div>
 
-    <div class="content">
+        <div class="header-center">
+            <div class="system-status">LIVE SYSTEM MONITOR</div>
+        </div>
+
+        <div class="monitor-right">
+            <div id="live-clock">00:00:00</div>
+            <div id="live-date">LOADING...</div>
+        </div>
+    </header>
+
+    <main class="content">
         <div class="iframe-wrapper">
             <iframe id="data-frame" src="https://polytronid.sharepoint.com/sites/Proyek-GA-Inventory-Tracking-Reach-Truk/_layouts/15/Doc.aspx?sourcedoc={53382e92-c852-4ab5-8162-2fe633e97559}&action=embedview&wdAllowInteractivity=False&Item=Chart%201&wdHideSheetTabs=True&wdHideHeaders=True&wdDownloadButton=False&wdHideGridlines=True"></iframe>
         </div>
-    </div>
+    </main>
 
-    <div class="footer">
-        <div><i class="fas fa-circle" style="color: #4CAF50;"></i> SYSTEM ACTIVE</div>
-        <div>GA INVENTORY TRACKING</div>
-    </div>
+    <footer class="footer">
+        <div>MATERIAL CONTROL UNIT</div>
+        <div>GA INVENTORY TRACKING SYSTEM &copy; 2026</div>
+    </footer>
 
     <script>
+        // Inisialisasi Jam & Uptime
+        let startTime = Date.now();
+
+        function updateMonitor() {
+            const now = new Date();
+            
+            // Jam Digital
+            document.getElementById('live-clock').textContent = now.toLocaleTimeString('id-ID', { hour12: false });
+            
+            // Tanggal
+            document.getElementById('live-date').textContent = now.toLocaleDateString('id-ID', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+
+            // Uptime Calculation
+            let diff = Math.floor((Date.now() - startTime) / 1000);
+            let h = Math.floor(diff / 3600).toString().padStart(2, '0');
+            let m = Math.floor((diff % 3600) / 60).toString().padStart(2, '0');
+            let s = (diff % 60).toString().padStart(2, '0');
+            document.getElementById('uptime').textContent = `${h}:${m}:${s}`;
+        }
+
+        // Auto Refresh Iframe (5 Menit)
         setInterval(() => {
-            document.getElementById('clock').textContent = new Date().toLocaleTimeString('id-ID');
-        }, 1000);
+            const iframe = document.getElementById('data-frame');
+            iframe.src = iframe.src;
+            console.log("System Sync: Data Updated");
+        }, 300000);
+
+        setInterval(updateMonitor, 1000);
+        updateMonitor();
     </script>
 </body>
 </html>
