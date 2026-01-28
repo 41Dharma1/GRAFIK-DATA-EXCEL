@@ -14,42 +14,45 @@
             overflow: hidden; 
         }
 
-        /* HEADER DASHBOARD */
         .header { 
             background: linear-gradient(90deg, #1e293b, #334155); 
             color: #38ef7d; 
             padding: 15px; 
             text-align: center; 
             border-bottom: 2px solid #38ef7d;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        /* CONTAINER UNTUK IFRAME */
+        /* CONTAINER SEBAGAI PEMOTONG (CROPPER) */
         .chart-wrapper {
             flex-grow: 1;
             position: relative;
             margin: 20px;
             background: #fff;
             border-radius: 15px;
-            overflow: hidden; /* Memotong scrollbar/header excel yang tidak perlu */
+            /* overflow: hidden sangat penting untuk memotong toolbar */
+            overflow: hidden; 
             border: 5px solid rgba(255,255,255,0.1);
         }
 
-        /* IFRAME ADJUSTMENT */
+        /* TEKNIK MENGHILANGKAN TOOLBAR */
         iframe {
+            position: absolute;
+            /* Menarik iframe sedikit ke atas jika ada toolbar di atas */
+            top: 0; 
+            left: 0;
             width: 100%;
-            height: 100%; /* Sesuaikan jika ingin memotong bagian tertentu */
+            /* Membuat iframe lebih tinggi dari kontainernya (misal +40px) 
+               agar toolbar di bagian bawah terdorong keluar dari area potong */
+            height: calc(100% + 40px); 
             border: none;
         }
 
-        /* FOOTER KETERANGAN */
         .footer {
             background: rgba(0,0,0,0.5);
             color: #94a3b8;
             padding: 10px;
             font-size: 11px;
             text-align: center;
-            letter-spacing: 1px;
         }
     </style>
 </head>
@@ -66,7 +69,7 @@
     </div>
 
     <div class="footer">
-        AUTO-REFRESH VIA SHAREPOINT SERVER • POLYTRON GA SYSTEM 2026
+        AUTO-REFRESH VIA SHAREPOINT SERVER • POLYTRON GA SYSTEM
     </div>
 
 </body>
